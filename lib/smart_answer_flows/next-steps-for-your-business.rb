@@ -33,7 +33,8 @@ module SmartAnswer
         option :not_sure
 
         on_response do |response|
-          calculator.annual_turnover = response
+          turnover = response == "less_than_85k" ? 84_999 : 85_001
+          calculator.business.estimated_annual_turnover = turnover
         end
 
         next_node do
@@ -51,7 +52,7 @@ module SmartAnswer
         option :not_sure
 
         on_response do |response|
-          calculator.employ_someone = response
+          calculator.business.employer = response != "no"
         end
 
         next_node do
@@ -69,7 +70,19 @@ module SmartAnswer
         none_option
 
         on_response do |response|
-          calculator.business_intent = response.split(",")
+          intents = response.split(",")
+
+          if intents.include?("buy_abroad")
+            calculator.business.import_goods = true
+          end
+
+          if intents.include?("sell_abroad")
+            calculator.business.export_goods = true
+          end
+
+          if intents.include?("sell_online")
+            calculator.business.sell_goods_online = true
+          end
         end
 
         next_node do
@@ -87,7 +100,7 @@ module SmartAnswer
         none_option
 
         on_response do |response|
-          calculator.business_support = response.split(",")
+          calculator.business.needs_financial_support = response != "none"
         end
 
         next_node do
@@ -104,7 +117,7 @@ module SmartAnswer
         option :elsewhere
 
         on_response do |response|
-          calculator.business_premises = response
+          calculator.business.has_non_domestic_property = response != "elsewhere"
         end
 
         next_node do
