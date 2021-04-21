@@ -10,7 +10,15 @@ describe('Hide this page banner component', function () {
 
   beforeEach(function () {
     container = document.createElement('div')
-    container.innerHTML = '<a class="app-c-hide-this-page-banner govuk-link" rel="nofollow noreferrer noopener" target="_blank" data-module="app-hide-this-page-banner" data-track-label="need-help-with" href="https://www.gov.uk/">Leave this site</a>'
+    container.innerHTML = '<div class="app-c-hide-this-page-banner" data-module="app-hide-this-page-banner">' +
+                            '<div class="govuk-width-container">' +
+                              '<div class="govuk-grid-row">' +
+                                '<div class="govuk-grid-column-one-quarter app-c-hide-this-page-banner__link-wrapper">' +
+                                  '<a class="gem-c-button govuk-button govuk-button--warning" role="button" rel="nofollow noreferrer noopener" target="_blank" href="https://www.gov.uk/">Hide this page</a>' +
+                                '</div>' +
+                              '</div>' +
+                            '</div>' +
+                          '</div>'
     document.body.appendChild(container)
     hideThisPageBannerElement = document.querySelector('[data-module="app-hide-this-page-banner"]')
     hideThisPageBannerModule = new HideThisPageBanner(hideThisPageBannerElement)
@@ -24,13 +32,13 @@ describe('Hide this page banner component', function () {
 
   it('opens a new page', function () {
     spyOn(hideThisPageBannerModule, 'openNewPage')
-    hideThisPageBannerElement.click()
+    hideThisPageBannerElement.querySelector('.gem-c-button').click()
     expect(hideThisPageBannerModule.openNewPage).toHaveBeenCalledWith('https://www.gov.uk/', 'nofollow noreferrer noopener')
   })
 
   it('replaces the original page', function () {
     spyOn(hideThisPageBannerModule, 'replaceCurrentPage')
-    hideThisPageBannerElement.click()
+    hideThisPageBannerElement.querySelector('.gem-c-button').click()
     expect(hideThisPageBannerModule.replaceCurrentPage).toHaveBeenCalledWith('https://www.gov.uk/')
   })
 })
