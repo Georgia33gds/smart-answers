@@ -5,4 +5,24 @@
   background-color: govuk-colour("white");
   padding: govuk-spacing(3) 0 govuk-spacing(3);
   border-bottom: 1px solid govuk-colour("mid-grey");
+  padding-top: govuk-spacing(3);
+
+  @include govuk-media-query($from: tablet) {
+    padding-bottom: govuk-spacing(1);
+  }
+}
+
+.app-c-hide-this-page-banner__link-wrapper {
+  @include govuk-media-query($from: tablet) {
+    padding-right: 0;
+    width: 170px;
+  }
+}
+
+.app-c-hide-this-page-banner__details-wrapper {
+  padding-top: govuk-spacing(2);
+
+  @include govuk-media-query($from: tablet) {
+    padding-top: govuk-spacing(1) + 3;
+  }
 }
