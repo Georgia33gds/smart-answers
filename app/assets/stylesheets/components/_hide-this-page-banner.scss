@@ -23,6 +23,6 @@
   padding-top: govuk-spacing(2);
 
   @include govuk-media-query($from: tablet) {
-    padding-top: govuk-spacing(1) + 3;
+    padding-top: govuk-spacing(1) + 2;
   }
 }
