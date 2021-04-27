@@ -1,6 +1,4 @@
 class DateQuestionPresenter < QuestionPresenter
-  include CurrentQuestionHelper
-
   delegate :default_day,
            :default_month,
            :default_year,
@@ -14,16 +12,12 @@ class DateQuestionPresenter < QuestionPresenter
     end
   end
 
-  def selected_day
-    prefill_value_for(self, :day)
-  end
-
-  def selected_month
-    prefill_value_for(self, :month)
-  end
-
-  def selected_year
-    prefill_value_for(self, :year)
+  def selected(field)
+    if response_for_current_question
+      response_for_current_question[field]
+    elsif flow_presenter.current_state.current_response.is_a?(Hash)
+      flow_presenter.current_state.current_response[field]
+    end
   end
 
 private

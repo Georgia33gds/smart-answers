@@ -15,6 +15,10 @@ class ResponseStore
     all[key]
   end
 
+  def has?(key)
+    all.key?(key)
+  end
+
   def clear
     @store = {}
   end

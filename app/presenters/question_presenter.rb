@@ -1,11 +1,8 @@
 class QuestionPresenter < NodePresenter
-  delegate :response_for_current_question, to: :@flow_presenter
+  delegate :response_for_current_question, to: :flow_presenter
 
-  attr_reader :params
-
-  def initialize(node, flow_presenter, state = nil, options = {}, params = {})
+  def initialize(node, flow_presenter, state = nil, options = {})
     super(node, flow_presenter, state)
-    @params = params
     @renderer = options[:renderer]
     helpers = options[:helpers] || []
     @renderer ||= SmartAnswer::ErbRenderer.new(

@@ -3,7 +3,7 @@ require "ostruct"
 module SmartAnswer
   class State < OpenStruct
     def initialize(start_node)
-      super(current_node: start_node, path: [], responses: [], response: nil, error: nil)
+      super(current_node: start_node, accepted_responses: {}, current_response: nil, error: nil)
     end
 
     def method_missing(method_name, *args)
@@ -20,9 +20,8 @@ module SmartAnswer
 
     def transition_to(new_node, input)
       dup.tap do |new_state|
-        new_state.path << current_node
         new_state.current_node = new_node
-        new_state.responses << input
+        new_state.accepted_responses[current_node] = input
         new_state.freeze
       end
     end
@@ -35,8 +34,7 @@ module SmartAnswer
 
     def initialize_copy(orig)
       super
-      self.responses = orig.responses.dup
-      self.path = orig.path.dup
+      self.accepted_responses = orig.accepted_responses.dup
     end
   end
 end

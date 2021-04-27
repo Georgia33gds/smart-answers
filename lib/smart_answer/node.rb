@@ -16,6 +16,10 @@ module SmartAnswer
 
     delegate :to_s, to: :name
 
+    def slug
+      name.to_s.dasherize
+    end
+
     def filesystem_friendly_name
       to_s.sub(/\?$/, "")
     end

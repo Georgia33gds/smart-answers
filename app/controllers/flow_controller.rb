@@ -6,22 +6,29 @@ class FlowController < ApplicationController
 
   def start
     response_store.clear
-    redirect_to flow_path(id: params[:id], node_slug: next_node_slug)
+    redirect_to flow_path(id: params[:id], node_slug: flow.questions.first.slug)
   end
 
   def show
-    @title = presenter.title
+    current_state = flow.resolve_state_from_response_store(response_store, node_name)
+    @presenter = FlowPresenter.new(flow: flow, current_state: current_state)
+    @title = @presenter.title
 
-    if params[:node_slug] == presenter.node_slug
-      render presenter.current_node.view_template_path, formats: [:html]
+    if params[:node_slug] == @presenter.node_slug
+      render @presenter.current_node.view_template_path, formats: [:html]
     else
-      redirect_to flow_path(id: params[:id], node_slug: presenter.node_slug, params: forwarding_responses)
+      redirect_to flow_path(id: params[:id], node_slug: @presenter.node_slug, params: forwarding_responses)
     end
   end
 
   def update
     response_store.add(node_name, params[:response])
-    redirect_to flow_path(id: params[:id], node_slug: next_node_slug, params: forwarding_responses)
+    current_state = flow.resolve_state_from_response_store(response_store)
+    @presenter = FlowPresenter.new(flow: flow, current_state: current_state)
+
+    redirect_to flow_path(id: params[:id],
+                          node_slug: @presenter.current_node.node_slug,
+                          params: forwarding_responses)
   end
 
   def destroy

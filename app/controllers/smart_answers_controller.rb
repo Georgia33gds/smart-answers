@@ -51,7 +51,11 @@ private
   def find_smart_answer
     @name = params[:id].to_sym
     @smart_answer = flow_registry.find(@name.to_s)
-    @presenter = FlowPresenter.new(request.params, @smart_answer)
+    current_state = @smart_answer.resolve_state_from_params(request.params)
+    @presenter = FlowPresenter.new(
+      flow: @smart_answer,
+      current_state: current_state,
+    )
   end
 
   def flow_registry
@@ -73,8 +77,7 @@ private
         action: :show,
         id: @name,
         started: "y",
-        responses: @presenter.current_state.responses,
-        protocol: request.ssl? || Rails.env.production? ? "https" : "http",
+        responses: @presenter.current_state.accepted_responses.values,
       }
       redirect_to redirect_params
     end

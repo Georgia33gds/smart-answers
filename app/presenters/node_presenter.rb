@@ -1,4 +1,6 @@
 class NodePresenter
+  attr_reader :flow_presenter
+
   delegate :outcome?, to: :@node
 
   def initialize(node, flow_presenter, state = nil, _options = {}, _params = {})
@@ -12,7 +14,7 @@ class NodePresenter
   end
 
   def node_slug
-    node_name.to_s.dasherize
+    @node.slug
   end
 
   def view_template_path

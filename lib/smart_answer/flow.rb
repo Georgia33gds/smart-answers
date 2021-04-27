@@ -125,56 +125,80 @@ module SmartAnswer
       @nodes.find { |n| n.name == node_or_name.to_sym } || raise("Node '#{node_or_name}' does not exist")
     end
 
+    def start_node
+      Node.new(self, name.underscore.to_sym)
+    end
+
     def start_state
       State.new(questions.first.name).freeze
     end
 
-    def process(responses)
-      responses.inject(start_state) do |state, response|
-        return state if state.error
-
-        transistion_state(state, response)
-      end
-    end
-
-    def resolve_state(responses, requested_node)
+    def resolve_state_from_response_store(response_store, requested_node = nil)
       state = start_state
-      until state.nil?
-        node_name = state.current_node.to_s
+      loop do
+        node_name = node(state.current_node).name.to_s
+        return state unless response_store.has?(node_name)
 
-        return state unless responses.key?(node_name)
+        response = response_store.get(node_name)
+        return current_state(state, response) if node_name == requested_node
 
-        response = responses[node_name]
-        new_state = transistion_state(state, response)
-
+        new_state = next_state(state, response)
         return new_state if new_state.error
-        return state if node_name == requested_node
         return new_state if node(new_state.current_node).outcome?
 
         state = new_state
       end
     end
 
-    def transistion_state(state, response)
-      state = node(state.current_node).transition(state, response)
-    rescue BaseStateTransitionError => e
-      if e.is_a?(LoggedError)
-        GovukError.notify e
+    def resolve_state_from_params(params)
+      responses = params[:responses].to_s.split("/")
+
+      state = responses.inject(start_state) do |current_state, response|
+        return current_state if current_state.error
+
+        next_state(current_state, response)
       end
 
-      state.dup.tap do |new_state|
-        new_state.error = e.message
-        new_state.freeze
+      if params[:next]
+        next_state(state, params[:response])
+      elsif params[:previous_response]
+        current_state(state, params[:previous_response])
+      else
+        state
       end
     end
 
-    def path(responses)
-      process(responses).path
+    def next_state(state, response)
+      node(state.current_node).transition(state, response)
+    rescue BaseStateTransitionError => e
+      error_state(state, response, e)
+    end
+
+    def current_state(state, response)
+      # check for errors by seeing if we can reach next state
+      node(state.current_node).transition(state, response)
+
+      state.dup.tap do |new_state|
+        new_state.current_response = response
+        new_state.freeze
+      end
+    rescue BaseStateTransitionError => e
+      error_state(state, response, e)
     end
 
     class InvalidStatus < StandardError; end
 
   private
+
+    def error_state(state, response, error)
+      GovukError.notify(error) if error.is_a?(LoggedError)
+
+      state.dup.tap do |new_state|
+        new_state.error = error.message
+        new_state.current_response = response
+        new_state.freeze
+      end
+    end
 
     def add_node(node)
       raise "Node #{node.name} already defined" if node_exists?(node)
