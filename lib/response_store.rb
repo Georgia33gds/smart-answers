@@ -11,6 +11,10 @@ class ResponseStore
     all[key] = value
   end
 
+  def has?(key)
+    all.key?(key)
+  end
+
   def get(key)
     all[key]
   end

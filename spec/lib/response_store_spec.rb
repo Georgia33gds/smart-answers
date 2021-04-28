@@ -26,6 +26,15 @@ RSpec.describe ResponseStore do
     end
   end
 
+  context "#has?" do
+    it "returns whether a value exists" do
+      responses = { "key" => "value" }
+      response_store = ResponseStore.new(responses: responses)
+
+      expect(response_store.has?("key")).to be(true)
+    end
+  end
+
   context "#get" do
     it "get value of key" do
       responses = { "key" => "value" }
