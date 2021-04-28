@@ -1,40 +1,4 @@
 RSpec.describe FlowHelper do
-  describe "#forwarding_responses" do
-    before do
-      response_store = ResponseStore.new(responses: { question1: "response1" })
-      allow(helper).to receive(:response_store).and_return(response_store)
-    end
-
-    it "returns an empty hash for session based flows" do
-      flow = SmartAnswer::Flow.new { response_store :session }
-      allow(helper).to receive(:flow).and_return(flow)
-
-      expect(helper.forwarding_responses).to eq({})
-    end
-
-    it "returns all the previous responses" do
-      flow = SmartAnswer::Flow.new { response_store :other }
-      allow(helper).to receive(:flow).and_return(flow)
-
-      expect(helper.forwarding_responses).to eq({ question1: "response1" })
-    end
-  end
-
-  describe "#presenter" do
-    it "returns the flow presenter" do
-      params[:node_slug] = "question-2"
-
-      flow = SmartAnswer::Flow.new { response_store :other }
-      allow(helper).to receive(:flow).and_return(flow)
-
-      response_store = ResponseStore.new(responses: { question1: "response1" })
-      allow(helper).to receive(:response_store).and_return(response_store)
-
-      expect(helper.presenter).to be_a(FlowPresenter)
-      expect(helper.presenter.flow).to be(flow)
-    end
-  end
-
   describe "#flow" do
     it "returns the flow for the current request" do
       params[:id] = "flow-name"
