@@ -20,7 +20,7 @@ module FlowTestHelper
     end
     @current_state ||= begin
       @cached_responses = @responses.dup
-      @flow.process(@responses)
+      SmartAnswer::ResolveState.new(@flow).from_params({ responses: @responses.join("/") })
     end
   end
 
