@@ -35,6 +35,8 @@ class SmartAnswersController < ApplicationController
     respond_to do |format|
       format.html do
         @graph_presenter = GraphPresenter.new(@smart_answer)
+
+        @title = @graph_presenter.title
         @graph_data = @graph_presenter.to_hash
         render layout: "application"
       end
