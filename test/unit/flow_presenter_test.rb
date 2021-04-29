@@ -105,24 +105,24 @@ class FlowPresenterTest < ActiveSupport::TestCase
     assert_equal @flow_presenter.name, @flow.name
   end
 
-  test "#change_collapsed_question_link returns a previous question link for a response store flow" do
+  test "#change_answer_link returns a previous question link for a response store flow" do
     @flow.response_store(:query_parameters)
     state = SmartAnswer::State.new(:second_question_key, forwarding_responses: { first_question_key: "answer" })
     flow_presenter = FlowPresenter.new(@flow, state)
     question = OpenStruct.new(node_slug: "foo")
     assert_equal(
       "/#{@flow.name}/s/foo?first_question_key=answer",
-      flow_presenter.change_collapsed_question_link(question),
+      flow_presenter.change_answer_link(question),
     )
   end
 
-  test "#change_collapsed_question_link returns a previous question link for a non response store flow" do
+  test "#change_answer_link returns a previous question link for a non response store flow" do
     state = SmartAnswer::ResolveState.new(@flow).from_params({ responses: "question-1-answer/question-2-answer" })
     flow_presenter = FlowPresenter.new(@flow, state)
-    questions = flow_presenter.collapsed_questions
+    questions = flow_presenter.answered_questions
     assert_equal(
       "/#{@flow.name}/y/question-1-answer?previous_response=question-2-answer",
-      flow_presenter.change_collapsed_question_link(questions.last),
+      flow_presenter.change_answer_link(questions.last),
     )
   end
 

@@ -27,7 +27,7 @@ class FlowPresenter
     current_node.outcome?
   end
 
-  def collapsed_questions
+  def answered_questions
     accepted_responses.keys.map { |name| presenter_for(flow.node(name)) }
   end
 
@@ -65,7 +65,7 @@ class FlowPresenter
     @start_node ||= StartNodePresenter.new(@flow.start_node)
   end
 
-  def change_collapsed_question_link(question)
+  def change_answer_link(question)
     if response_store
       flow_path(flow.name, node_slug: question.node_slug, params: forwarding_responses)
     else

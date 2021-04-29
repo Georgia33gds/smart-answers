@@ -39,12 +39,12 @@
         </tr>
       </thead>
       <tbody class="govuk-table__body">
-        <% @presenter.collapsed_questions.each do |question| %>
+        <% @presenter.answered_questions.each do |question| %>
           <%= render(
               'smart_answers/shared/previous_answer',
               question: question,
               accepted_response: @presenter.accepted_responses[question.node_name],
-              question_link: @presenter.change_collapsed_question_link(question),
+              question_link: @presenter.change_answer_link(question),
             )
           %>
         <% end %>
