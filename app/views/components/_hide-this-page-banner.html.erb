@@ -11,8 +11,8 @@
 %>
 <div class="app-c-hide-this-page-banner" data-module="hide-this-page-banner">
   <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter app-c-hide-this-page-banner__link-wrapper">
+    <div class="app-c-hide-this-page-banner__columns">
+      <div class="app-c-hide-this-page-banner__link-wrapper">
         <%= render "govuk_publishing_components/components/button", {
           text: "<strong>#{link_label}</strong>".html_safe,
           href: link_url,
@@ -25,7 +25,7 @@
           data_attributes: link_data_attributes
         } %>
       </div>
-      <div class="govuk-grid-column-three-quarters app-c-hide-this-page-banner__details-wrapper">
+      <div class="app-c-hide-this-page-banner__details-wrapper">
         <%= render "govuk_publishing_components/components/details", {
           title: details_title,
           data_attributes: details_data_attributes,

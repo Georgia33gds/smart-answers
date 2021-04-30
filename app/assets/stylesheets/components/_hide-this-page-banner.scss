@@ -12,15 +12,21 @@
   }
 }
 
+.app-c-hide-this-page-banner__columns {
+  @include govuk-media-query($from: tablet) {
+    display: flex;
+  }
+}
+
 .app-c-hide-this-page-banner__link-wrapper {
   @include govuk-media-query($from: tablet) {
-    padding-right: 0;
-    width: 170px;
+    padding-right: 1em;
   }
 }
 
 .app-c-hide-this-page-banner__details-wrapper {
   padding-top: govuk-spacing(2);
+  flex: 1;
 
   @include govuk-media-query($from: tablet) {
     padding-top: govuk-spacing(1) + 2;
