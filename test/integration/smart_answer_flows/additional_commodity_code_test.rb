@@ -28,6 +28,7 @@ class AdditionalCommodityCodeTest < ActiveSupport::TestCase
       add_response 50
       assert_equal 50, current_state.calculator.starch_glucose_weight
       assert_current_node :how_much_sucrose_3?
+      assert_equal current_question, "How much sucrose, invert sugar or isoglucose does the product contain?"
     end
   end
   context "answer 75" do
