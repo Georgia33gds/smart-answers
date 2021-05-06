@@ -9,7 +9,7 @@
 <%= render "smart_answers/shared/hide_this_page" %>
 
 <div class="govuk-grid-row">
-  <div id="result-info" class="govuk-grid-column-two-thirds outcome">
+  <div id="result-info" data-outcome-node="<%= outcome.node_name %>" class="govuk-grid-column-two-thirds outcome">
     <%= render 'smart_answers/shared/debug' %>
     <%= render "govuk_publishing_components/components/title", {
       title: outcome.heading_title
